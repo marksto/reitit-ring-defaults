@@ -170,7 +170,9 @@
   "All of `ring-defaults-middleware`, plus Reitit's content negotiation
    (using Muuntaja), exception and coercion middleware."
   (conj
-   ring-defaults-middleware
+   ;; All of `ring-defaults-middleware`, except multipart, which must come
+   ;; after request coercion (see docstring).
+   (into [] (remove #{multipart-middleware}) ring-defaults-middleware)
 
    format/format-negotiate-middleware
    format/format-response-middleware
@@ -181,4 +183,6 @@
 
    coercion/coerce-exceptions-middleware
    coercion/coerce-request-middleware
-   coercion/coerce-response-middleware))
+   coercion/coerce-response-middleware
+
+   multipart-middleware))
